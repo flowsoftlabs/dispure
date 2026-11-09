@@ -1,15 +1,13 @@
 ---
-title: '토토와 네코의 굿즈 컬렉션을 준비했어요'
-description: '봉제인형부터 키링까지, 디스푸레에 등록할 가상 굿즈 10종을 소개합니다.'
+title: 토토와 네코의 굿즈 컬렉션을 준비했어요
+description: 봉제인형부터 키링까지, 디스푸레에 등록할 가상 굿즈 10종을 소개합니다.
 date: 2026-11-09
 category: collection
 cover: images/toto-plush.png
+pinned: false
 draft: false
 ---
-
 디스푸레의 굿즈 기록 기능을 보여주기 위해 토토(토끼)와 네코(고양이)를 바탕으로 시연용 컬렉션을 준비했어요.
-
-![별 쿠션을 안은 토토 봉제인형](/dispure/images/toto-plush.png)
 
 ## 준비한 굿즈
 
