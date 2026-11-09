@@ -19,6 +19,9 @@ content:
     label: 게시글 관리
     type: collection
     path: src/content/articles
+    filename:
+      template: "{primary}.md"
+      field: create
     format: yaml-frontmatter
 
     view:
