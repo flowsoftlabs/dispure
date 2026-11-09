@@ -3,15 +3,26 @@ import type { CollectionEntry } from 'astro:content';
 import { categoryName, formatDate, link } from '../lib/site';
 interface Props { article: CollectionEntry<'articles'>; featured?: boolean }
 const { article, featured = false } = Astro.props;
+const isStats = article.id.includes('statistics') || article.data.title.includes('통계') || article.data.title.includes('월별');
+const isIntro = article.data.pinned;
+const displayCover = article.data.cover ? link(article.data.cover) : undefined;
 ---
 <article class:list={['article-row', { featured }]}>
   <div class="article-copy">
-    <p class="post-meta">{categoryName(article.data.category)} <span aria-hidden="true">·</span> <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time></p>
+    <p class="post-meta">
+      {isIntro && <span class="post-pin">처음 읽는 글</span>}
+      {categoryName(article.data.category)} <span aria-hidden="true">·</span>
+      <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time>
+    </p>
     <h3><a href={link(`articles/${article.id}/`)}>{article.data.title}</a></h3>
     <p class="article-summary">{article.data.description}</p>
     <p class="post-author">디스푸레 공식노트</p>
   </div>
-  <a href={link(`articles/${article.id}/`)} class="article-thumb" aria-label={`${article.data.title} 읽기`}>
-    {article.data.cover ? <img src={link(article.data.cover)} alt="" loading="lazy" /> : <div class="thumbnail-placeholder" aria-hidden="true">✦</div>}
+  <a href={link(`articles/${article.id}/`)} class:list={['article-thumb', { 'thumb-intro': isIntro, 'thumb-stats': isStats, 'thumb-cover': !!displayCover }]} aria-label={`${article.data.title} 읽기`}>
+    {displayCover ? <img src={displayCover} alt="" loading="lazy" /> : isIntro ?
+      <span class="thumb-intro-mark" aria-hidden="true"><b>DISPURE</b><small>공식노트 시작하기</small></span>
+      : isStats ?
+      <span class="thumb-chart" aria-hidden="true"><span style="height:34%"></span><span style="height:76%"></span><span style="height:47%"></span><span style="height:65%"></span></span>
+      : <span class="thumb-generic" aria-hidden="true">{categoryName(article.data.category)}</span>}
   </a>
 </article>

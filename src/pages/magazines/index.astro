@@ -3,8 +3,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { categories, link } from '../../lib/site';
 import { getCollection } from 'astro:content';
 const posts = await getCollection('articles', ({ data }) => !data.draft);
+const icons: Record<string,string> = { collection:'◈', favorite:'♡', widgets:'▣', development:'✎', news:'↗' };
 ---
 <BaseLayout title="매거진">
-  <div class="page-intro"><p class="eyebrow">MAGAZINES</p><h1>매거진</h1><p>관심 있는 주제를 선택해서 읽어보세요.</p></div>
-  <div class="magazine-grid standalone">{categories.map((category) => <a class="magazine-item" href={link(`magazines/${category.slug}/`)}><span class="magazine-mark" aria-hidden="true">✦</span><span><strong>{category.label}</strong><small>{category.description}</small><small class="article-count">{posts.filter((p) => p.data.category === category.slug).length}개의 글</small></span></a>)}</div>
+  <div class="page-intro"><p class="eyebrow">MAGAZINES</p><h1>매거진</h1><p>주제별로 모아둔 디스푸레의 이야기를 살펴보세요.</p></div>
+  <div class="magazine-grid standalone">
+    {categories.map(category => {
+      const count = posts.filter(p => p.data.category === category.slug).length;
+      return <a class="magazine-item" href={link(`magazines/${category.slug}/`)}>
+        <span class={`magazine-mark mag-${category.slug}`} aria-hidden="true">{icons[category.slug]}</span>
+        <span><strong>{category.label}</strong><small>{category.description}</small><small class="article-count">{count ? `${count}개의 글` : '글 준비 중'}</small></span>
+      </a>;
+    })}
+  </div>
 </BaseLayout>
