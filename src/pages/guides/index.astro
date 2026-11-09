@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { link } from '../../lib/site';
+const guides = [
+  { title: '굿즈 기록 시작하기', description: '사진과 구매 정보를 등록하는 순서', href: 'articles/goods-first-step/' },
+  { title: '구매 통계 살펴보기', description: '월별·연도별 기록 확인하기', href: 'articles/collection-statistics/' },
+];
+---
+<BaseLayout title="사용법">
+  <div class="page-intro"><p class="eyebrow">GUIDES</p><h1>디스푸레 사용법</h1><p>처음 사용하는 사람도 쉽게 따라 할 수 있도록 정리합니다.</p></div>
+  <div class="guide-list">{guides.map((guide, i) => <a class="guide-link" href={link(guide.href)}><span class="guide-number">{String(i + 1).padStart(2,'0')}</span><span><strong>{guide.title}</strong><small>{guide.description}</small></span><span aria-hidden="true">→</span></a>)}</div>
+</BaseLayout>

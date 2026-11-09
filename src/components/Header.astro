@@ -1,0 +1,18 @@
+---
+import { link } from '../lib/site';
+const pathname = Astro.url.pathname;
+const nav = [
+  { href: '', label: '홈' },
+  { href: 'articles/', label: '전체 글' },
+  { href: 'magazines/', label: '매거진' },
+  { href: 'guides/', label: '사용법' },
+];
+---
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href={link('')} aria-label="디스푸레 공식노트 홈">DISPURE<span aria-hidden="true">✦</span></a>
+    <nav class="primary-nav" aria-label="주 메뉴">
+      {nav.map((item) => <a class:list={['nav-link', { active: item.href ? pathname.startsWith(link(item.href)) : pathname === link('') }]} href={link(item.href)}>{item.label}</a>)}
+    </nav>
+  </div>
+</header>

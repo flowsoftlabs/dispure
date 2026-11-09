@@ -1,0 +1,71 @@
+
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { siteName } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = siteName,
+  description = '굿즈와 최애를 기록하는 이야기. 디스푸레의 활용법과 개발노트.',
+  image,
+} = Astro.props;
+
+// 공식 사이트 주소
+const siteOrigin = 'https://flowsoftlabs.github.io';
+
+// 개발 환경에서도 실제 배포 주소 기준으로 canonical 생성
+const pathname = import.meta.env.DEV
+  ? `/dispure${Astro.url.pathname}`
+  : Astro.url.pathname;
+
+const canonical = new URL(pathname, siteOrigin).toString();
+
+// 이미지 URL도 공식 배포 경로를 기준으로 생성
+const ogImage = image
+  ? new URL(
+      image.startsWith('http')
+        ? image
+        : `/dispure/${image.replace(/^\/?(dispure\/)?/, '')}`,
+      siteOrigin
+    ).toString()
+  : undefined;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <title>
+      {title === siteName ? title : `${title} | ${siteName}`}
+    </title>
+  </head>
+
+  <body>
+    <Header />
+    <main class="container">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

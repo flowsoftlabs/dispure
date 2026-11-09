@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Profile from '../components/Profile.astro';
+import ArticleRow from '../components/ArticleRow.astro';
+import { getCollection } from 'astro:content';
+import { categories, link } from '../lib/site';
+const all = (await getCollection('articles', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const pinned = all.find((entry) => entry.data.pinned);
+const recent = all.filter((entry) => entry.id !== pinned?.id).slice(0, 6);
+---
+<BaseLayout>
+  <Profile />
+  <div class="section-tabs" aria-label="콘텐츠 바로가기">
+    <a class="active" href={link('')}>홈</a>
+    <a href={link('articles/')}>전체 글</a>
+    <a href={link('magazines/')}>매거진</a>
+    <a href={link('guides/')}>사용법</a>
+  </div>
+  {pinned && <section class="content-section">
+    <div class="section-heading"><h2>먼저 읽어보세요</h2><span class="section-caption">고정 글</span></div>
+    <ArticleRow article={pinned} featured />
+  </section>}
+  <section class="content-section">
+    <div class="section-heading"><h2>최근 게시글</h2><a href={link('articles/')}>전체 보기 <span aria-hidden="true">→</span></a></div>
+    {recent.length ? recent.map((entry) => <ArticleRow article={entry}/>) : <p class="empty-state">게시글을 준비 중입니다.</p>}
+  </section>
+  <section class="content-section magazine-section">
+    <div class="section-heading"><h2>매거진</h2><a href={link('magazines/')}>전체 보기 <span aria-hidden="true">→</span></a></div>
+    <div class="magazine-grid">{categories.map((category) => <a class="magazine-item" href={link(`magazines/${category.slug}/`)}><span class="magazine-mark" aria-hidden="true">✦</span><span><strong>{category.label}</strong><small>{category.description}</small></span></a>)}</div>
+  </section>
+</BaseLayout>

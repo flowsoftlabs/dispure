@@ -1,27 +1,53 @@
-# DISPURE Official Journal — redesigned starter
+# DISPURE 공식노트 (Astro 7)
 
-오시바나의 note 콘텐츠 운영 방식을 참고한 **게시글 중심 매거진** 시안입니다. 특정 사이트의 디자인을 복제한 것은 아닙니다.
+오시바나 note형의 미니멀한 게시글 중심 정적 웹사이트입니다. *기존 저장소의 `_legacy-site/`는 수정하지 마세요.*
 
-## 구성
-- `index.html`: 최신 글, 대표 기사, 추천 기사, 매거진 주제, 최근 글
-- `magazines/index.html`: 카테고리/연재 목록
-- `guides/index.html`: 사용법 목차
-- `articles/*.html`: 개별 게시글 초안
-- `assets/style.css`: 모바일 반응형 스타일
-- `assets/images/*.webp`: 이 대화에서 제작된 디스푸레 원본 캐릭터·가상 굿즈 이미지
-- `.nojekyll`: Pages 정적 파일 처리
+## Codespaces 설치 및 실행
 
-## 배포
-1. GitHub에서 `flowsoftlabs/dispure` 공개 저장소를 만듭니다.
-2. **이 폴더 안의 파일과 폴더**를 저장소의 루트에 업로드합니다.
-3. Settings → Pages → Deploy from a branch → `main` / `(root)` 저장.
-4. 예상 주소: https://flowsoftlabs.github.io/dispure/
+현재 저장소 `/workspaces/dispure`에서 압축 내용을 루트에 덮어씁니다. 기존 `.git/`, `_legacy-site/`, `node_modules/`는 유지합니다.
 
-`rlarudfo87` 기존 주소, 개인정보처리방침, app-ads.txt 등의 자산은 전혀 수정하지 않습니다.
+```bash
+npm install
+npm run dev -- --host 0.0.0.0
+```
 
-## 미완료/주의
-- 실제 Google Play 링크 확인 후 소개 영역에 삽입
-- 실제 앱에서 직접 촬영한 화면으로 기능별 가이드 작성
-- 게시글/메타데이터는 초안이며 발행일은 실제 발행 시 설정
-- 이미지의 가상 굿즈 안내 문구는 삭제하지 말 것
-- HTML을 직접 열어서 로컬에서 미리 볼 수 있음. 더 정교한 로컬 테스트는 `python -m http.server 8000`.
+GitHub Pages 배포 전 확인:
+
+```bash
+npm run build
+npm run preview -- --host 0.0.0.0
+```
+
+## 새 글 작성
+
+`src/content/articles/새-글-slug.md`를 만들고 다음 프런트매터를 넣습니다.
+
+```yaml
+---
+title: '제목'
+description: '한 줄 요약'
+date: 2026-11-09
+category: collection
+cover: images/cover.png # 선택
+pinned: false
+draft: false
+---
+```
+
+본문은 Markdown으로 작성합니다. `draft: true`는 사이트 목록과 빌드에서 제외합니다.
+
+카테고리: collection, favorite, widgets, development, news.
+
+## 이미지
+
+`public/images/`에 파일을 넣고 frontmatter의 `cover`를 `images/파일명.png`로 지정합니다. 본문 이미지는 `![설명](/dispure/images/파일명.png)` 형태로 사용합니다.
+
+## GitHub Pages
+
+`Settings → Pages → Build and deployment → Source: GitHub Actions`로 설정한 후 `main`에 푸시합니다. 자동 워크플로 `.github/workflows/deploy.yml`이 `dist/`를 배포합니다.
+
+사이트 주소: https://flowsoftlabs.github.io/dispure/
+
+## 주의
+
+초기 게시글 3개는 작성 예시입니다. 공개 전 내용과 사진을 검토하세요. 실제 앱 화면이 아닌 가상 굿즈를 시연 데이터로 명확히 표시했습니다.

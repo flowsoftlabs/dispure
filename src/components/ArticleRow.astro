@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { categoryName, formatDate, link } from '../lib/site';
+interface Props { article: CollectionEntry<'articles'>; featured?: boolean }
+const { article, featured = false } = Astro.props;
+---
+<article class:list={['article-row', { featured }]}>
+  <div class="article-copy">
+    <p class="post-meta">{categoryName(article.data.category)} <span aria-hidden="true">·</span> <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time></p>
+    <h3><a href={link(`articles/${article.id}/`)}>{article.data.title}</a></h3>
+    <p class="article-summary">{article.data.description}</p>
+    <p class="post-author">디스푸레 공식노트</p>
+  </div>
+  <a href={link(`articles/${article.id}/`)} class="article-thumb" aria-label={`${article.data.title} 읽기`}>
+    {article.data.cover ? <img src={link(article.data.cover)} alt="" loading="lazy" /> : <div class="thumbnail-placeholder" aria-hidden="true">✦</div>}
+  </a>
+</article>

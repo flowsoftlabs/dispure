@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { categories } from '../../lib/site';
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return categories.map((category) => ({ params: { slug: category.slug }, props: { category, articles: articles.filter((p) => p.data.category === category.slug) } }));
+}
+interface Props { category: (typeof categories)[number]; articles: CollectionEntry<'articles'>[] }
+const { category, articles } = Astro.props;
+const sorted = [...articles].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title={category.label} description={category.description}>
+  <div class="page-intro"><p class="eyebrow">MAGAZINE</p><h1>{category.label}</h1><p>{category.description}</p></div>
+  <section class="content-section">{sorted.map((article) => <ArticleRow article={article}/>)}{sorted.length === 0 && <p class="empty-state">이 매거진의 첫 글을 준비 중입니다.</p>}</section>
+</BaseLayout>
