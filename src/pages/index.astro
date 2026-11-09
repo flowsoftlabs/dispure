@@ -1,24 +1,54 @@
+
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Profile from '../components/Profile.astro';
 import ArticleRow from '../components/ArticleRow.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { categories, link } from '../lib/site';
 
+type Article = CollectionEntry<'articles'>;
+
+// 발행 일시가 있으면 우선 사용.
+// 기존 게시글은 발행 날짜를 사용.
+const publishTime = (article: Article): number =>
+  (
+    article.data.publishedAt ??
+    article.data.date
+  ).getTime();
+
 const all = (
-  await getCollection('articles', ({ data }) => !data.draft)
-).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+  await getCollection(
+    'articles',
+    ({ data }) => !data.draft
+  )
+).sort((a, b) => {
+  const timeDiff = publishTime(b) - publishTime(a);
+
+  if (timeDiff !== 0) {
+    return timeDiff;
+  }
+
+  // 같은 날짜·시각일 때 일정한 순서 유지
+  return b.id.localeCompare(a.id);
+});
+
+// 최신 게시글 6개
+const recent = all.slice(0, 6);
+
+// 최근 게시글과 중복되지 않는 고정 게시글
+const pinned = all.filter(
+  (article) =>
+    article.data.pinned &&
+    !recent.some((item) => item.id === article.id)
 );
 
-const pinned = all.find((entry) => entry.data.pinned);
-
-const recent = all
-  .filter((entry) => entry.id !== pinned?.id)
-  .slice(0, 6);
-
-const categoriesWithPosts = categories.filter((category) =>
-  all.some((post) => post.data.category === category.slug)
+// 게시글이 존재하는 매거진
+const categoriesWithPosts = categories.filter(
+  (category) =>
+    all.some(
+      (post) =>
+        post.data.category === category.slug
+    )
 );
 ---
 
@@ -26,74 +56,115 @@ const categoriesWithPosts = categories.filter((category) =>
   <Profile />
 
   <nav class="section-tabs" aria-label="주요 페이지">
-    <a class="active" aria-current="page" href={link('')}>
+    <a
+      class="active"
+      aria-current="page"
+      href={link('')}
+    >
       홈
     </a>
-    <a href={link('articles/')}>전체 글</a>
-    <a href={link('magazines/')}>매거진</a>
-    <a href={link('guides/')}>사용법</a>
+
+    <a href={link('articles/')}>
+      전체 글
+    </a>
+
+    <a href={link('magazines/')}>
+      매거진
+    </a>
+
+    <a href={link('guides/')}>
+      사용법
+    </a>
   </nav>
 
-  {
-    pinned && (
-      <section class="content-section">
-        <div class="section-heading">
-          <h2>먼저 읽어보세요</h2>
-          <span class="section-caption">고정 글</span>
-        </div>
-
-        <ArticleRow article={pinned} featured />
-      </section>
-    )
-  }
-
+  <!-- 최신 게시글을 가장 먼저 표시 -->
   <section class="content-section">
     <div class="section-heading">
       <h2>최근 게시글</h2>
+
       <a href={link('articles/')}>
-        전체 보기 <span aria-hidden="true">→</span>
+        전체 보기
+        <span aria-hidden="true">→</span>
       </a>
     </div>
 
     {
-      recent.length ? (
-        recent.map((entry) => <ArticleRow article={entry} />)
+      recent.length > 0 ? (
+        recent.map((article, index) => (
+          <ArticleRow
+            article={article}
+            featured={index === 0}
+          />
+        ))
       ) : (
-        <p class="empty-state">게시글을 준비 중입니다.</p>
+        <p class="empty-state">
+          게시글을 준비 중입니다.
+        </p>
       )
     }
   </section>
 
+  <!-- 최근 글 목록에 없는 고정 게시글 -->
+  {
+    pinned.length > 0 && (
+      <section class="content-section">
+        <div class="section-heading">
+          <h2>먼저 읽어보세요</h2>
+          <span class="section-caption">
+            고정 글
+          </span>
+        </div>
+
+        {pinned.map((article) => (
+          <ArticleRow article={article} />
+        ))}
+      </section>
+    )
+  }
+
+  <!-- 매거진 -->
   {
     categoriesWithPosts.length > 0 && (
       <section class="content-section magazine-section">
         <div class="section-heading">
           <h2>매거진</h2>
+
           <a href={link('magazines/')}>
-            전체 보기 <span aria-hidden="true">→</span>
+            전체 보기
+            <span aria-hidden="true">→</span>
           </a>
         </div>
 
         <div class="magazine-grid">
-          {categoriesWithPosts.map((category) => (
-            <a
-              class="magazine-item"
-              href={link(`magazines/${category.slug}/`)}
-            >
-              <span>
-                <strong>{category.label}</strong>
-                <small>{category.description}</small>
-                <small class="article-count">
-                  {
-                    all.filter(
-                      (post) => post.data.category === category.slug
-                    ).length
-                  }
-                  개의 글
-                </small>
-              </span>
-            </a>
-          ))}
+          {categoriesWithPosts.map((category) => {
+            const count = all.filter(
+              (post) =>
+                post.data.category === category.slug
+            ).length;
+
+            return (
+              <a
+                class="magazine-item"
+                href={link(
+                  `magazines/${category.slug}/`
+                )}
+              >
+                <span>
+                  <strong>
+                    {category.label}
+                  </strong>
+
+                  <small>
+                    {category.description}
+                  </small>
+
+                  <small class="article-count">
+                    {count}개의 글
+                  </small>
+                </span>
+              </a>
+            );
+          })}
         </div>
       </section>
     )

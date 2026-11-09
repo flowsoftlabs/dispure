@@ -1,10 +1,56 @@
+
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleRow from '../../components/ArticleRow.astro';
-import { getCollection } from 'astro:content';
-const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+type Article = CollectionEntry<'articles'>;
+
+const publishTime = (article: Article): number =>
+  (
+    article.data.publishedAt ??
+    article.data.date
+  ).getTime();
+
+const articles = (
+  await getCollection(
+    'articles',
+    ({ data }) => !data.draft
+  )
+).sort((a, b) => {
+  const timeDiff = publishTime(b) - publishTime(a);
+
+  if (timeDiff !== 0) {
+    return timeDiff;
+  }
+
+  return b.id.localeCompare(a.id);
+});
 ---
+
 <BaseLayout title="전체 글">
-  <div class="page-intro"><p class="eyebrow">ALL STORIES</p><h1>전체 글</h1><p>디스푸레의 이야기와 사용법을 한곳에서 만나보세요.</p></div>
-  <section class="content-section">{articles.map((article) => <ArticleRow article={article}/>)}{articles.length === 0 && <p class="empty-state">게시글을 준비 중입니다.</p>}</section>
+  <div class="page-intro">
+    <p class="eyebrow">ALL STORIES</p>
+
+    <h1>전체 글</h1>
+
+    <p>
+      디스푸레의 이야기와 사용법을
+      한곳에서 만나보세요.
+    </p>
+  </div>
+
+  <section class="content-section">
+    {
+      articles.length > 0 ? (
+        articles.map((article) => (
+          <ArticleRow article={article} />
+        ))
+      ) : (
+        <p class="empty-state">
+          게시글을 준비 중입니다.
+        </p>
+      )
+    }
+  </section>
 </BaseLayout>
