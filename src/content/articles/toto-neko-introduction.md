@@ -4,7 +4,7 @@ description: "디스푸레의 두 친구, 크림색 토끼 토토와 연보라�
 date: 2026-11-09
 category: development
 cover: images/file.png
-pinned: true
+pinned: false
 draft: false
 ---
 # 디스푸레의 두 친구, 토토와 네코를 소개합니다!
