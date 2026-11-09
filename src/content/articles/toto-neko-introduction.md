@@ -1,8 +1,6 @@
 ---
 title: 디스푸레의 두 친구, 토토와 네코를 소개합니다!
-description: |-
-  디스푸레의 두 친구, 크림색 토끼 토토와 연보라색 고양이 네코를 소개합니다. 
-  각 캐릭터의 성격과 특징, 다양한 표정과 디자인 설정을 살펴보세요.
+description: "디스푸레의 두 친구, 크림색 토끼 토토와 연보라색 고양이 네코를 소개합니다. "
 date: 2026-11-09
 category: development
 cover: images/file.png
