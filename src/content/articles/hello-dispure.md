@@ -1,12 +1,12 @@
 ---
-title: '처음 만나는 디스푸레 공식노트'
-description: '앱의 사용법과 굿즈 수집 이야기를 하나씩 기록하는 공간을 시작합니다.'
+title: 처음 만나는 디스푸레 공식노트
+description: 앱의 사용법과 굿즈 수집 이야기를 하나씩 기록하는 공간을 시작합니다.
 date: 2026-11-09
 category: development
+cover: images/toto-plush.png
 pinned: true
 draft: false
 ---
-
 안녕하세요. 디스푸레 공식노트입니다.
 
 이곳에서는 굿즈와 최애를 기록하는 Android 앱 디스푸레(DISPURE)의 사용법과 제작 이야기를 전합니다.
@@ -21,3 +21,4 @@ draft: false
 새로운 글은 매거진별로 찾아볼 수 있도록 정리할 예정입니다.
 
 > 이 사이트에 소개하는 토토·네코 상품은 앱 시연을 위한 가상 굿즈입니다.
+
