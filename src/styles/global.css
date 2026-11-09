@@ -61,3 +61,7 @@
  .thumb-intro-mark b{font-size:12px}.thumb-intro-mark small{font-size:8px}
  .article-summary{font-size:11px}.post-author{display:none}.magazine-grid{grid-template-columns:1fr}
 }
+
+/* Magazine cards: text-only, no decorative icons */
+.magazine-mark { display: none; }
+.magazine-item { gap: 0; padding: 17px 20px; }

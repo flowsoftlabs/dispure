@@ -1,0 +1,85 @@
+# DISPURE official note — Pages CMS
+# Place this file in the repository root.
+
+media:
+  - name: covers
+    label: 대표 이미지
+    input: public/images
+    output: images
+    categories: [image]
+    rename: safe
+
+  - name: article_images
+    label: 본문 이미지
+    input: public/images
+    output: https://flowsoftlabs.github.io/dispure/images
+    categories: [image]
+    rename: safe
+
+
+content:
+  - name: articles
+    label: 게시글 관리
+    type: collection
+    path: src/content/articles
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      fields: [title, date, category, draft]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: 제목
+        type: string
+        required: true
+      - name: description
+        label: 요약
+        type: text
+        required: true
+      - name: date
+        label: 발행일
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: category
+        label: 매거진
+        type: select
+        required: true
+        options:
+          values:
+            - name: collection
+              label: 굿즈 컬렉션
+            - name: favorite
+              label: 최애 생활
+            - name: widgets
+              label: 홈 화면 꾸미기
+            - name: development
+              label: 개발노트
+            - name: news
+              label: 소식 · 업데이트
+      - name: cover
+        label: 대표 이미지
+        type: image
+        options:
+          media: covers
+      - name: pinned
+        label: 홈 화면 고정 글
+        type: boolean
+      - name: draft
+        label: 비공개 초안
+        type: boolean
+        description: 켜면 공식노트에 표시하지 않습니다.
+      - name: body
+        label: 본문
+        type: rich-text
+        options:
+          format: markdown
+          media: article_images
+          switcher: true
