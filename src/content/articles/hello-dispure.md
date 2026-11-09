@@ -3,7 +3,6 @@ title: 처음 만나는 디스푸레 공식노트
 description: 앱의 사용법과 굿즈 수집 이야기를 하나씩 기록하는 공간을 시작합니다.
 date: 2026-11-09
 category: development
-cover: images/file.png
 pinned: true
 draft: false
 ---
