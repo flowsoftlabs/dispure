@@ -21,7 +21,7 @@ content:
     path: src/content/articles
     filename:
       template: "{primary}.md"
-      field: create
+      field: true
     format: yaml-frontmatter
 
     view:
