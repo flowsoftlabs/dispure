@@ -30,6 +30,7 @@ content:
         - title
         - category
         - date
+        - publishedAt
         - draft
       sort: date
       order: desc
@@ -51,6 +52,15 @@ content:
         required: true
         options:
           format: yyyy-MM-dd
+
+      - name: publishedAt
+        label: 발행 일시
+        type: date
+        default: ""
+        description: 최신 글 정렬에 사용합니다. 새 글 발행 시 날짜와 시각을 입력하세요.
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm"
 
       - name: category
         label: 매거진
