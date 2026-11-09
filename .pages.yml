@@ -1,7 +1,18 @@
 
 media:
-  input: public/images
-  output: /dispure/images
+  - name: covers
+    label: 대표 이미지
+    input: public/images
+    output: images
+    categories: [image]
+    rename: safe
+
+  - name: article_images
+    label: 본문 이미지
+    input: public/images
+    output: https://flowsoftlabs.github.io/dispure/images
+    categories: [image]
+    rename: safe
 
 content:
   - name: articles
@@ -9,6 +20,7 @@ content:
     type: collection
     path: src/content/articles
     format: yaml-frontmatter
+
     view:
       primary: title
       fields:
@@ -18,6 +30,7 @@ content:
         - draft
       sort: date
       order: desc
+
     fields:
       - name: title
         label: 제목
@@ -54,9 +67,10 @@ content:
               label: 소식 · 업데이트
 
       - name: cover
-        label: 대표 이미지 경로
-        type: string
-        description: "예: images/toto-plush.png"
+        label: 대표 이미지
+        type: image
+        options:
+          media: covers
 
       - name: pinned
         label: 고정 게시글
@@ -65,7 +79,12 @@ content:
       - name: draft
         label: 비공개 초안
         type: boolean
+        description: 켜면 공식노트에 표시하지 않습니다.
 
       - name: body
         label: 본문
         type: rich-text
+        options:
+          format: markdown
+          media: article_images
+          switcher: true
