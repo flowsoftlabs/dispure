@@ -1,0 +1,71 @@
+
+media:
+  input: public/images
+  output: /dispure/images
+
+content:
+  - name: articles
+    label: 게시글 관리
+    type: collection
+    path: src/content/articles
+    format: yaml-frontmatter
+    view:
+      primary: title
+      fields:
+        - title
+        - category
+        - date
+        - draft
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: 제목
+        type: string
+        required: true
+
+      - name: description
+        label: 요약
+        type: text
+        required: true
+
+      - name: date
+        label: 발행일
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+
+      - name: category
+        label: 매거진
+        type: select
+        required: true
+        options:
+          values:
+            - name: collection
+              label: 굿즈 컬렉션
+            - name: favorite
+              label: 최애 생활
+            - name: widgets
+              label: 홈 화면 꾸미기
+            - name: development
+              label: 개발노트
+            - name: news
+              label: 소식 · 업데이트
+
+      - name: cover
+        label: 대표 이미지 경로
+        type: string
+        description: "예: images/toto-plush.png"
+
+      - name: pinned
+        label: 고정 게시글
+        type: boolean
+
+      - name: draft
+        label: 비공개 초안
+        type: boolean
+
+      - name: body
+        label: 본문
+        type: rich-text
